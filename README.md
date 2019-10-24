@@ -1,6 +1,6 @@
 # simplex-calculator
 Calculadora do método Simplex para programação linear
-
+## Hosted on https://vdufloth.github.io/simplex-calculator
 ## Notas do Trabalho:
 Desenvolvimento de um algoritmo para o método Simplex:
 * Entrega e apresentação até 26/11/2019;
