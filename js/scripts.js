@@ -11,23 +11,24 @@
 //LEMBRAR DE ZERAR OS DADOS DA TABELA QUANDO PEGAR UMA NOVA
 
 //* Ex1 -> Z = 1120
+let varColunas = ['Z', 'x1', 'x2', 'x3', 'x4', 'xF1', 'xF2', 'xF3', 'b']
 let linhaTabela1 = [1, -5, 3, -4, 1, 0, 0, 0, 0]
 let linhaTabela2 = [0, 1, 1, 1, 1, 1, 0, 0, 600]
 let linhaTabela3 = [0, 2, 0, 1, 0, 0, 1, 0, 280]
 let linhaTabela4 = [0, 1, 0, 0, 3, 0, 0, 1, 150]
 let dadosTabela = [linhaTabela1,
-    linhaTabela2,
-    linhaTabela3,
-    linhaTabela4]
+                   linhaTabela2,
+                   linhaTabela3,
+                   linhaTabela4]
 // */
-let nColunas
+let nColunas = dadosTabela[0].length
 let colunaPivo
 let linhaPivo
 let valorPivo
 let NLP // Nova Linha Pivô
+let nTabelas = 0
 
 function getPivos() {
-    nColunas = dadosTabela[0].length
     colunaPivo = 0
     // Coluna Pivô = O menor valor da primeira linha
     let menorValor = dadosTabela[0][0]
@@ -69,6 +70,7 @@ function gerarNLP() {
    com sinal contrário
    somado com os valores da linha antiga) */
 function gerarNovaTabela() {
+    nTabelas += 1
     let novaTabela = [];
     for (i = 0; i < dadosTabela.length; i++) {
         novaTabela[i] = new Array(nColunas);
@@ -87,16 +89,64 @@ function gerarNovaTabela() {
         }
         console.log(i + ' : ' + novaTabela[i])
     }
+    dadosTabela = novaTabela
 }
 
 function printTabela() {
-    let divTabela = document.getElementById("divTabela")
-    divTabela.innerHTML = 'Alou'
+    let divTabela = document.getElementById("divt")
+    let tabela = document.createElement('table')
+    tabela.createCaption().innerHTML = 'Tabela '+nTabelas
+    
+    let header = tabela.createTHead()
+    let headerRow = header.insertRow(-1)
+    for (j=0; j<varColunas.length; j++){
+        let th = headerRow.insertCell(-1)
+        th.innerText = varColunas[j]
+        if (j == colunaPivo) {
+            th.className = "pivo"
+        }
+    }
+    
+    for (i=0; i<dadosTabela.length; i++) {
+        let novaLinha = tabela.insertRow(-1)
+        for (j=0; j<nColunas; j++) {
+            let novaCelula = novaLinha.insertCell(-1)
+            novaCelula.id = "T"+nTabelas+"I"+i+"J"+j
+            novaCelula.innerText = dadosTabela[i][j]
+            if (j == colunaPivo || i == linhaPivo) {
+                if (j == colunaPivo && i == linhaPivo) {
+                    novaCelula.className = "elementoPivo"
+                } else {
+                    novaCelula.className = "pivo"
+                }
+            }
+
+            if (i == 0 && j == nColunas-1) {
+                novaCelula.className = "valorz"
+            }
+        }
+    }
+    divTabela.appendChild(tabela)
 }
 
-function verificarSolucaoOtima() { return false }
+function ehOtima() {
+    console.log('verificando se solucao e otima')
+    for (j=0; j<nColunas-1; j++){
+        if (dadosTabela[0][j] < 0) {
+            return false
+        }
+    }
+    return true
+}
 
-getPivos()
-gerarNLP()
-gerarNovaTabela()
-printTabela()
+function calcular(){
+    console.log('Iniciando calculo')
+    //preencherDadosTabela()
+    while(!ehOtima()) {
+        getPivos()
+        gerarNLP()
+        printTabela()
+        gerarNovaTabela()
+    }
+}
+calcular()
