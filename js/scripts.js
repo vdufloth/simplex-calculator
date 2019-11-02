@@ -21,12 +21,14 @@ let dadosTabela = [linhaTabela1,
                    linhaTabela3,
                    linhaTabela4]
 // */
+let oldTabela = dadosTabela
 let nColunas = dadosTabela[0].length
 let colunaPivo
 let linhaPivo
 let valorPivo
 let NLP // Nova Linha Pivô
 let nTabelas = 0
+let otima = false
 
 function getPivos() {
     colunaPivo = 0
@@ -89,12 +91,14 @@ function gerarNovaTabela() {
         }
         console.log(i + ' : ' + novaTabela[i])
     }
+    oldTabela = dadosTabela
     dadosTabela = novaTabela
 }
 
 function printTabela() {
     let divTabela = document.getElementById("divt")
     let tabela = document.createElement('table')
+    tabela.className = 'simplex'
     tabela.createCaption().innerHTML = 'Tabela '+nTabelas
     
     let header = tabela.createTHead()
@@ -123,7 +127,7 @@ function printTabela() {
                 }
             }
 
-            if (i == 0 && j == nColunas-1) {
+            if (i == 0 && j == nColunas-1 && otima) {
                 novaCelula.className = "valorZ"
             }
         }
@@ -141,13 +145,47 @@ function ehOtima() {
     return true
 }
 
+function printNLP(){
+    let divTabela = document.getElementById("divt")
+    let tabela = document.createElement('table')
+    tabela.className = 'nlp'
+    let dvText = document.createElement('div')
+    dvText.innerText = 'Nova Linha Pivô:'
+    divTabela.appendChild(dvText)
+    let tbody = tabela.createTBody()
+    let novaLinha = tbody.insertRow(-1)
+    novaLinha.className = 'nlp'
+    let novaCelula = novaLinha.insertCell(-1)
+    novaCelula.innerText = 'LP='
+    for (j=0; j<nColunas; j++) {
+        novaCelula = novaLinha.insertCell(-1)
+        novaCelula.innerText = dadosTabela[linhaPivo][j]        
+    }
+    novaCelula = novaLinha.insertCell(-1)
+    novaCelula.innerText = '(÷'+valorPivo+')'
+
+    novaLinha = tbody.insertRow(-1)
+    novaLinha.className = 'nlp'
+    novaCelula = novaLinha.insertCell(-1)
+    novaCelula.innerText = 'NLP ='
+    for (j=0; j<NLP.length; j++) {
+        let novaCelula = novaLinha.insertCell(-1)
+        novaCelula.innerText = NLP[j]
+    }
+    novaCelula = novaLinha.insertCell(-1)
+    novaCelula.innerText = ''
+    divTabela.appendChild(tabela)
+}
+
 function calcular(){
-    console.log('Iniciando calculo')
-    //preencherDadosTabela()
+    console.log('Iniciando calculo ')
     while(!ehOtima()) {
         getPivos()
-        gerarNLP()
+      //  gerarVs()
+      //  printVs()
         printTabela()
+        gerarNLP()
+        printNLP()
         gerarNovaTabela()
     }
 }

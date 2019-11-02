@@ -1,9 +1,20 @@
-table {
+table.simplex {
+    table-layout: fixed;
+    width:100%;
+    text-align: right;
+    border-collapse:collapse;
+    margin-top: 70px;
+}
+
+tr.nlp {
+  border: 1px solid black;
+}
+table.nlp {
     table-layout: fixed;
     width:100%;
     text-align: right;
     border-collapse:collapse
-  }
+}
 th.pivo, td.pivo{
   background-color: lightgrey;
 }
