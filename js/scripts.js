@@ -102,17 +102,19 @@ function printTabela() {
     for (j=0; j<varColunas.length; j++){
         let th = headerRow.insertCell(-1)
         th.innerText = varColunas[j]
-        if (j == colunaPivo) {
-            th.className = "pivo"
-        }
     }
-    
+
+    let tbody = tabela.createTBody()
     for (i=0; i<dadosTabela.length; i++) {
-        let novaLinha = tabela.insertRow(-1)
+        let novaLinha = tbody.insertRow(-1)
+        if (i === 0) {
+            novaLinha.className = 'linhaZ'
+        }
         for (j=0; j<nColunas; j++) {
             let novaCelula = novaLinha.insertCell(-1)
             novaCelula.id = "T"+nTabelas+"I"+i+"J"+j
             novaCelula.innerText = dadosTabela[i][j]
+
             if (j == colunaPivo || i == linhaPivo) {
                 if (j == colunaPivo && i == linhaPivo) {
                     novaCelula.className = "elementoPivo"
@@ -122,7 +124,7 @@ function printTabela() {
             }
 
             if (i == 0 && j == nColunas-1) {
-                novaCelula.className = "valorz"
+                novaCelula.className = "valorZ"
             }
         }
     }

@@ -1,24 +1,21 @@
 table {
-  table-layout: fixed;
+    table-layout: fixed;
     width:100%;
-    text-align: center;
+    text-align: right;
+    border-collapse:collapse
   }
-  /*alinhar texto à direita,
-  colunas do mesmo tamanho,
-  tabela centralizada (como ???????)
-td {
-  text-align: right;
-}
-*/
-
 th.pivo, td.pivo{
-  background-color: steelblue;
+  background-color: lightgrey;
 }
 
 td.elementoPivo{
-  background-color: rgb(70, 180, 138);
+  background-color: rgb(255, 100, 100);
 }
 
-td.valorz{
-  background-color: rgb(240, 188, 120);
+td.valorZ{
+  color: green;
+}
+
+tr.linhaZ{
+  border:1px solid black;
 }
