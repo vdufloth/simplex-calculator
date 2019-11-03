@@ -1,15 +1,3 @@
-/* Regras do Simplex
-1. Identificar função objetivo
-2. Identificar restrições
-3. Criar tabela (dadosTabela)
-4. Identificar pivôs
-5. Recalcular tabela
-6. Verificar se é ótima
-   Se não for, voltar ao passo 4
-*/
-
-//LEMBRAR DE ZERAR OS DADOS DA TABELA QUANDO PEGAR UMA NOVA
-
 //* Ex1 -> Z = 1120
 let varColunas = ['Z', 'x1', 'x2', 'x3', 'x4', 'xF1', 'xF2', 'xF3', 'b']
 let linhaTabela1 = [1, -5, 3, -4, 1, 0, 0, 0, 0]
@@ -178,7 +166,15 @@ function printNLP(){
 }
 
 function calcularSimplex(){
-    console.log('Iniciando calculo ')
+    //preencherTabela
+  //while(!otima){}
+      //encontrarPivos
+      //mostrarTabela pintada
+      //recalcular e mostrar nlp
+      //recalcular e mostrar linhas novas
+      //se otima
+        //mostrar tabelaNova pintando o Z apenas
+        //end loop    
     while(!ehOtima()) {
         getPivos()
       //  gerarVs()
