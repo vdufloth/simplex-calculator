@@ -6,6 +6,10 @@ table.simplex {
     margin-top: 70px;
 }
 
+input.nx {
+  width: 70px;
+}
+
 tr.nlp {
   border: 1px solid black;
 }

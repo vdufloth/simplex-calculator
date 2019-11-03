@@ -177,7 +177,7 @@ function printNLP(){
     divTabela.appendChild(tabela)
 }
 
-function calcular(){
+function calcularSimplex(){
     console.log('Iniciando calculo ')
     while(!ehOtima()) {
         getPivos()
@@ -189,4 +189,3 @@ function calcular(){
         gerarNovaTabela()
     }
 }
-calcular()

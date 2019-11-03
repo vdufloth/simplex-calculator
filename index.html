@@ -1,12 +1,35 @@
 <!doctype html>
 <html lang="pt-br">
+
 <head>
   <meta charset="utf-8">
   <title>Simplex Calculator</title>
   <link rel="stylesheet" href="css/styles.css">
+  <script src="js/simplex.js"></script>
 </head>
+
 <body>
+  <form>
+    <div id="divOBJ">Função Objetivo:<br />
+      <span>Z = </span>
+      <input class="nx" name="ov1" type="number" />
+      <span class="xx" id="ox1">x1</span>
+    </div>
+    <div id="divRES">Restrições:<br />
+      <input class="nx" name="r1v1" type="number" />
+      <span class="xx" id="r1x1">x1</span>
+      <select>
+          <option value="menor-igual"><=</option>
+          <option value="maior-igual">>=</option>
+          <option value="igual">=</option>
+          <option value="menor"><</option>
+          <option value="maior">></option>
+      </select>
+      <span>0</span>
+    </div>
+  </form>
+  <button onclick="calcularSimplex()">Calcular</button>
   <div id="divt" style="max-width: 600px;"></div>
 </body>
-<script src="js/scripts.js"></script>
+
 </html>
