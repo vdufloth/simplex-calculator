@@ -6,8 +6,8 @@ table.simplex {
     margin-top: 70px;
 }
 
-input.nx {
-  width: 70px;
+input {
+  width: 30px;
 }
 
 tr.nlp {
@@ -43,4 +43,9 @@ td.valorZ{
 
 tr.linhaZ{
   border:1px solid black;
+}
+
+#divret{
+  display: flex;
+  flex-direction: column;
 }

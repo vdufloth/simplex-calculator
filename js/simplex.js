@@ -1,24 +1,58 @@
-//* Ex1 -> Z = 1120
-let varColunas = ['Z', 'x1', 'x2', 'x3', 'x4', 'xF1', 'xF2', 'xF3', 'b']
-let linhaTabela1 = [1, -5, 3, -4, 1, 0, 0, 0, 0]
-let linhaTabela2 = [0, 1, 1, 1, 1, 1, 0, 0, 600]
-let linhaTabela3 = [0, 2, 0, 1, 0, 0, 1, 0, 280]
-let linhaTabela4 = [0, 1, 0, 0, 3, 0, 0, 1, 150]
-let dadosTabela = [linhaTabela1,
-                   linhaTabela2,
-                   linhaTabela3,
-                   linhaTabela4]
-// */
-let oldTabela = dadosTabela
-let nColunas = dadosTabela[0].length
+//Globais:
+let varColunas
+let dadosTabela
+let oldTabela
+let nColunas
 let colunaPivo
 let linhaPivo
 let valorPivo
-let NLP // Nova Linha Pivô
-let nTabelas = 0
-let otima = false
+let NLP
+let nTabelas
+let otima
+let lIntermediariaAux
 
-function getPivos() {
+function prepararValores() {
+    var dados = [];
+    $("#divret .restricao").each(function(i, el) {
+        var restricao = [];
+        $(el).find("input").each(function(j, input) {
+            var valor = $(input).val();
+            restricao.push(valor);
+        });
+        dados.push(restricao);
+    });
+
+    console.log(dados);
+
+    var num_variavies = $("#inputNX").val();
+    var num_restricoes = $("#inputNR").val();
+
+    ///*
+    varColunas = ['Z', 'x1', 'x2', 'x3', 'x4', 'xF1', 'xF2', 'xF3', 'b']
+    let linhaTabela1 = [1, -5, 3, -4, 1, 0, 0, 0, 0]
+    let linhaTabela2 = [0, 1, 1, 1, 1, 1, 0, 0, 600]
+    let linhaTabela3 = [0, 2, 0, 1, 0, 0, 1, 0, 280]
+    let linhaTabela4 = [0, 1, 0, 0, 3, 0, 0, 1, 150]
+    dadosTabela = [linhaTabela1, linhaTabela2, linhaTabela3, linhaTabela4]
+    //*/
+    // varColunas = ["Z"];
+    // for(var i=0; i<num_variavies; i++) {
+    //     varColunas.push("x" + (i+1));
+    // }
+    // for(var i=0; i<num_restricoes; i++) {
+    //     varColunas.push("xF" + (i+1));
+    // }
+    // varColunas.push("b");
+
+  //  dadosTabela = dados;
+    oldTabela = dadosTabela
+    nColunas = dadosTabela[0].length
+    NLP = []
+    nTabelas = 0
+    otima = false
+}
+
+function encontrarPivos() {
     colunaPivo = 0
     // Coluna Pivô = O menor valor da primeira linha
     let menorValor = dadosTabela[0][0]
@@ -46,94 +80,48 @@ function getPivos() {
     console.log('Valor pivô:  ' + valorPivo)
 }
 
-// Linha selecionada dividido pelo elemento pivô
-function gerarNLP() {
-    NLP = []
-    for (j = 0; j < nColunas; j++) {
-        NLP[j] = (dadosTabela[linhaPivo][j] / valorPivo)
-    }
-    console.log('NLP: ' + NLP)
-}
-
-/* Nova linha é NLP vezes
-   o elemento na intersecção da sua linha
-   com sinal contrário
-   somado com os valores da linha antiga) */
-function gerarNovaTabela() {
-    nTabelas += 1
-    let novaTabela = [];
-    for (i = 0; i < dadosTabela.length; i++) {
-        novaTabela[i] = new Array(nColunas);
-    }
-    console.log('Novas Linhas:')
-    for (i = 0; i < dadosTabela.length; i++) {
-        for (j = 0; j < nColunas; j++) {
-            if (i === linhaPivo) {
-                novaTabela[i][j] = NLP[j]
-            } else {
-                novaTabela[i][j] =
-                    dadosTabela[i][colunaPivo] * -1
-                    * NLP[j]
-                    + dadosTabela[i][j]
-            }
-        }
-        console.log(i + ' : ' + novaTabela[i])
-    }
-    oldTabela = dadosTabela
-    dadosTabela = novaTabela
-}
-
-function printTabela() {
+function mostrarTabela() {
     let divTabela = document.getElementById("divt")
     let tabela = document.createElement('table')
     tabela.className = 'simplex'
-    tabela.createCaption().innerHTML = 'Tabela '+nTabelas
-    
+    tabela.createCaption().innerHTML = 'Tabela ' + nTabelas
+
     let header = tabela.createTHead()
     let headerRow = header.insertRow(-1)
-    for (j=0; j<varColunas.length; j++){
+    for (j = 0; j < varColunas.length; j++) {
         let th = headerRow.insertCell(-1)
         th.innerText = varColunas[j]
     }
 
     let tbody = tabela.createTBody()
-    for (i=0; i<dadosTabela.length; i++) {
+    for (i = 0; i < dadosTabela.length; i++) {
         let novaLinha = tbody.insertRow(-1)
         if (i === 0) {
             novaLinha.className = 'linhaZ'
         }
-        for (j=0; j<nColunas; j++) {
+        for (j = 0; j < nColunas; j++) {
             let novaCelula = novaLinha.insertCell(-1)
-            novaCelula.id = "T"+nTabelas+"I"+i+"J"+j
+            novaCelula.id = "T" + nTabelas + "I" + i + "J" + j
             novaCelula.innerText = dadosTabela[i][j]
 
-            if (j == colunaPivo || i == linhaPivo) {
-                if (j == colunaPivo && i == linhaPivo) {
-                    novaCelula.className = "elementoPivo"
-                } else {
-                    novaCelula.className = "pivo"
+            if (!otima) {
+                if (j == colunaPivo || i == linhaPivo) {
+                    if (j == colunaPivo && i == linhaPivo) {
+                        novaCelula.className = "elementoPivo"
+                    } else {
+                        novaCelula.className = "pivo"
+                    }
                 }
-            }
-
-            if (i == 0 && j == nColunas-1 && otima) {
+            } else if (i == 0 && j == nColunas - 1) {
                 novaCelula.className = "valorZ"
             }
         }
     }
     divTabela.appendChild(tabela)
+    calcularVBS()
 }
 
-function ehOtima() {
-    console.log('verificando se solucao e otima')
-    for (j=0; j<nColunas-1; j++){
-        if (dadosTabela[0][j] < 0) {
-            return false
-        }
-    }
-    return true
-}
-
-function printNLP(){
+function mostrarNLP() {
     let divTabela = document.getElementById("divt")
     let tabela = document.createElement('table')
     tabela.className = 'nlp'
@@ -145,18 +133,18 @@ function printNLP(){
     novaLinha.className = 'nlp'
     let novaCelula = novaLinha.insertCell(-1)
     novaCelula.innerText = 'LP='
-    for (j=0; j<nColunas; j++) {
+    for (j = 0; j < nColunas; j++) {
         novaCelula = novaLinha.insertCell(-1)
-        novaCelula.innerText = dadosTabela[linhaPivo][j]        
+        novaCelula.innerText = dadosTabela[linhaPivo][j]
     }
     novaCelula = novaLinha.insertCell(-1)
-    novaCelula.innerText = '(÷'+valorPivo+')'
+    novaCelula.innerText = '(÷' + valorPivo + ')'
 
     novaLinha = tbody.insertRow(-1)
     novaLinha.className = 'nlp'
     novaCelula = novaLinha.insertCell(-1)
     novaCelula.innerText = 'NLP ='
-    for (j=0; j<NLP.length; j++) {
+    for (j = 0; j < NLP.length; j++) {
         let novaCelula = novaLinha.insertCell(-1)
         novaCelula.innerText = NLP[j]
     }
@@ -165,23 +153,137 @@ function printNLP(){
     divTabela.appendChild(tabela)
 }
 
-function calcularSimplex(){
-    //preencherTabela
-  //while(!otima){}
-      //encontrarPivos
-      //mostrarTabela pintada
-      //recalcular e mostrar nlp
-      //recalcular e mostrar linhas novas
-      //se otima
-        //mostrar tabelaNova pintando o Z apenas
-        //end loop    
-    while(!ehOtima()) {
-        getPivos()
-      //  gerarVs()
-      //  printVs()
-        printTabela()
-        gerarNLP()
-        printNLP()
-        gerarNovaTabela()
+function mostrarCalculos(){
+    let divTabela = document.getElementById("divt")
+    for(l=0; l<oldTabela.length;l++) { 
+        if (l !== linhaPivo) {
+            let tabela = document.createElement('table')
+            tabela.className = 'nlp'
+            let dvText = document.createElement('div')
+            dvText.innerText = 'Nova Linha '+(l+1)+':'
+            divTabela.appendChild(dvText)
+            let tbody = tabela.createTBody()
+            let novaLinha = tbody.insertRow(-1)
+            let novaCelula = novaLinha.insertCell(-1)
+            novaCelula.innerText = 'NLP='
+            for (j = 0; j < nColunas; j++) {
+                novaCelula = novaLinha.insertCell(-1)
+                novaCelula.innerText = NLP[j]
+            }
+            novaCelula = novaLinha.insertCell(-1)
+            novaCelula.innerText = '*-('+oldTabela[l][colunaPivo]+')'
+
+            novaLinha = tbody.insertRow(-1)
+            novaLinha.className = 'meio1'
+            novaCelula = novaLinha.insertCell(-1)
+            novaCelula.innerText = ' ='
+            for (j = 0; j < NLP.length; j++) {
+                let novaCelula = novaLinha.insertCell(-1)
+                novaCelula.innerText = lIntermediariaAux[l][i]
+            }
+            novaCelula = novaLinha.insertCell(-1)
+            novaCelula.innerText = '+'
+            
+            novaLinha = tbody.insertRow(-1)
+            novaLinha.className = 'meio2'
+            novaCelula = novaLinha.insertCell(-1)
+            novaCelula.innerText = ' Antiga='
+            for (j = 0; j < NLP.length; j++) {
+                let novaCelula = novaLinha.insertCell(-1)
+                novaCelula.innerText = oldTabela[l][j]
+            }
+            novaCelula = novaLinha.insertCell(-1)
+            novaCelula.innerText = ''
+
+            novaLinha = tbody.insertRow(-1)
+            novaCelula = novaLinha.insertCell(-1)
+            novaCelula.innerText = ' NL'+(l+1)+'='
+            for (j = 0; j < NLP.length; j++) {
+                let novaCelula = novaLinha.insertCell(-1)
+                novaCelula.innerText = dadosTabela[l][j]
+            }
+            novaCelula = novaLinha.insertCell(-1)
+            novaCelula.innerText = ''
+
+            divTabela.appendChild(tabela)
+        }
+    }
+}
+/* Nova linha é NLP vezes
+o elemento na intersecção da sua linha
+com sinal contrário
+   somado com os valores da linha antiga) */
+function recalcularTabela() {
+    //NLP
+    NLP = []
+    for (j = 0; j < nColunas; j++) {
+        NLP[j] = (dadosTabela[linhaPivo][j] / valorPivo)
+    }
+    console.log('NLP: ' + NLP)
+    mostrarNLP()
+    //FIM NLP
+
+    lIntermediariaAux = []
+    nTabelas += 1
+    let novaTabela = [];
+    for (i = 0; i < dadosTabela.length; i++) {
+        novaTabela[i] = new Array(nColunas);
+        lIntermediariaAux[i] = new Array(nColunas);
+    }
+    console.log('Novas Linhas:')
+    for (i = 0; i < dadosTabela.length; i++) {
+        for (j = 0; j < nColunas; j++) {
+            if (i === linhaPivo) {
+                novaTabela[i][j] = NLP[j]
+            } else {
+                lIntermediariaAux[i][j] = dadosTabela[i][colunaPivo] * -1 * NLP[j]
+                novaTabela[i][j] = lIntermediariaAux[i][j] + dadosTabela[i][j]
+            }
+        }
+        console.log(i + ' : ' + novaTabela[i])
+    }
+    oldTabela = dadosTabela
+    dadosTabela = novaTabela
+    mostrarCalculos()
+}
+
+function verificarSolucao() {
+    for (j = 0; j < nColunas - 1; j++) {
+        if (dadosTabela[0][j] < 0) {
+            return false
+        }
+    }
+    return true
+}
+
+function calcularVBS() {
+    let divTabela = document.getElementById("divt")
+    let tableVB = document.createElement('table')
+    let vbHead = tableVB.createTHead();
+    let vbBody = tableVB.createTBody();
+    let novaLinha = vbHead.insertRow(-1)
+    let novaCelula = novaLinha.insertCell(-1);
+    novaCelula.innerText = 'Variáveis Básicas:'
+    novaCelula = novaLinha.insertCell(-1);
+    novaCelula.innerText = 'Variáveis Não Básicas:'
+    novaCelula = novaLinha.insertCell(-1);
+    novaCelula.innerText = 'Valor de Z'
+
+    divTabela.appendChild(tableVB)
+}
+
+function calcularSimplex() {
+    let divTabela = document.getElementById("divt")
+    divTabela.innerHTML = ''
+    
+    prepararValores()
+    while (!otima) {
+        encontrarPivos()
+        mostrarTabela()
+        recalcularTabela()
+        if (verificarSolucao()) {
+            otima = true
+            mostrarTabela()
+        }        
     }
 }
