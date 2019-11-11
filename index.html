@@ -3,24 +3,29 @@
 
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Simplex Calculator</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles.css"
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
+
 <body>
+  <div class="container-fluid">
     <form id="divqtdx">
-       <span>Número de variáveis de decisão (x):</span>
-       <input id="inputNX" type="number"/>
-       <br/>
-       <span>Número de restrições:</span>
-       <input id="inputNR" type="number"/>
-       <br/>
-       <button id="gera_restricoes">Continuar</button>
+      <span>Número de variáveis de decisão (x):</span>
+      <input id="num_variavies" onfocusout="deixaInteiros(this)" />
+      <br />
+      <span>Número de restrições:</span>
+      <input id="num_restricoes" onfocusout="deixaInteiros(this)" />
+      <br />
+      <button id="gera_restricoes">Continuar</button>
     </form>
-  <div id="divret"></div>
-  <button onclick="calcularSimplex()">Calcular</button>
-  <div id="divt" style="max-width: 600px;"></div>
+    <div id="restricoes"></div>
+    <button onclick="calcularSimplex()">Calcular</button>
+    <div id="divt" style="max-width: 600px;"></div>
+  </div>
 </body>
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="js/simplex.js"></script>
 <script src="js/aux.js"></script>
+
 </html>

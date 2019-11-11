@@ -11,40 +11,40 @@ let nTabelas
 let otima
 let lIntermediariaAux
 
+/* resultado 1200
+varColunas = ['Z', 'x1', 'x2', 'x3', 'x4', 'xF1', 'xF2', 'xF3', 'b']
+let linhaTabela1 = [1, -5, 3, -4, 1, 0, 0, 0, 0]
+let linhaTabela2 = [0, 1, 1, 1, 1, 1, 0, 0, 600]
+let linhaTabela3 = [0, 2, 0, 1, 0, 0, 1, 0, 280]
+let linhaTabela4 = [0, 1, 0, 0, 3, 0, 0, 1, 150]
+dadosTabela = [linhaTabela1, linhaTabela2, linhaTabela3, linhaTabela4]
+*/
+
 function prepararValores() {
     var dados = [];
-    $("#divret .restricao").each(function(i, el) {
+    document.querySelectorAll("div.restricao").forEach( div => {
         var restricao = [];
-        $(el).find("input").each(function(j, input) {
-            var valor = $(input).val();
-            restricao.push(valor);
+        div.querySelectorAll("input").forEach( input => {
+            restricao.push(input.value);
+            console.log(input.value)
         });
         dados.push(restricao);
     });
 
     console.log(dados);
 
-    var num_variavies = $("#inputNX").val();
-    var num_restricoes = $("#inputNR").val();
+    var num_variavies = document.getElementById('num_variavies').value;
+    var num_restricoes = document.getElementById('num_restricoes').value;
+    varColunas = ["Z"];
+    for(var i=0; i<num_variavies; i++) {
+        varColunas.push("x" + (i+1));
+    }
+    for(var i=0; i<num_restricoes; i++) {
+        varColunas.push("xF" + (i+1));
+    }
+    varColunas.push("b");
 
-    ///*
-    varColunas = ['Z', 'x1', 'x2', 'x3', 'x4', 'xF1', 'xF2', 'xF3', 'b']
-    let linhaTabela1 = [1, -5, 3, -4, 1, 0, 0, 0, 0]
-    let linhaTabela2 = [0, 1, 1, 1, 1, 1, 0, 0, 600]
-    let linhaTabela3 = [0, 2, 0, 1, 0, 0, 1, 0, 280]
-    let linhaTabela4 = [0, 1, 0, 0, 3, 0, 0, 1, 150]
-    dadosTabela = [linhaTabela1, linhaTabela2, linhaTabela3, linhaTabela4]
-    //*/
-    // varColunas = ["Z"];
-    // for(var i=0; i<num_variavies; i++) {
-    //     varColunas.push("x" + (i+1));
-    // }
-    // for(var i=0; i<num_restricoes; i++) {
-    //     varColunas.push("xF" + (i+1));
-    // }
-    // varColunas.push("b");
-
-  //  dadosTabela = dados;
+    dadosTabela = dados;
     oldTabela = dadosTabela
     nColunas = dadosTabela[0].length
     NLP = []
