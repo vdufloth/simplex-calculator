@@ -31,5 +31,9 @@ function gerarRestricoes(e){
         }
         line += "</div>";
         document.getElementById('restricoes').innerHTML += line;
-    }
+    }    
+    document.getElementById('valoresForm').innerHTML += '<button id="btnCalcular"class="btn btn-primary" type="submit">Calcular</button>'
+    document.getElementById('btnCalcular').addEventListener(
+        'click', calcularSimplex, false
+    );
 }

@@ -11,7 +11,7 @@ let nTabelas
 let otima
 let lIntermediariaAux
 
-/* resultado 1200
+/* resultado 1120
 varColunas = ['Z', 'x1', 'x2', 'x3', 'x4', 'xF1', 'xF2', 'xF3', 'b']
 let linhaTabela1 = [1, -5, 3, -4, 1, 0, 0, 0, 0]
 let linhaTabela2 = [0, 1, 1, 1, 1, 1, 0, 0, 600]
@@ -21,30 +21,12 @@ dadosTabela = [linhaTabela1, linhaTabela2, linhaTabela3, linhaTabela4]
 */
 
 function prepararValores() {
-    var dados = [];
-    document.querySelectorAll("div.restricao").forEach( div => {
-        var restricao = [];
-        div.querySelectorAll("input").forEach( input => {
-            restricao.push(input.value);
-            console.log(input.value)
-        });
-        dados.push(restricao);
-    });
-
-    console.log(dados);
-
-    var num_variavies = document.getElementById('num_variavies').value;
-    var num_restricoes = document.getElementById('num_restricoes').value;
-    varColunas = ["Z"];
-    for(var i=0; i<num_variavies; i++) {
-        varColunas.push("x" + (i+1));
-    }
-    for(var i=0; i<num_restricoes; i++) {
-        varColunas.push("xF" + (i+1));
-    }
-    varColunas.push("b");
-
-    dadosTabela = dados;
+    varColunas = ['Z', 'x1', 'x2', 'x3', 'x4', 'xF1', 'xF2', 'xF3', 'b']
+    let linhaTabela1 = [1, -5, 3, -4, 1, 0, 0, 0, 0]
+    let linhaTabela2 = [0, 1, 1, 1, 1, 1, 0, 0, 600]
+    let linhaTabela3 = [0, 2, 0, 1, 0, 0, 1, 0, 280]
+    let linhaTabela4 = [0, 1, 0, 0, 3, 0, 0, 1, 150]
+    dadosTabela = [linhaTabela1, linhaTabela2, linhaTabela3, linhaTabela4]
     oldTabela = dadosTabela
     nColunas = dadosTabela[0].length
     NLP = []
@@ -81,24 +63,22 @@ function encontrarPivos() {
 }
 
 function mostrarTabela() {
-    let divTabela = document.getElementById("divt")
+    let calculosabela = document.getElementById("calculos")
     let tabela = document.createElement('table')
-    tabela.className = 'simplex'
-    tabela.createCaption().innerHTML = 'Tabela ' + nTabelas
+    tabela.className = 'table'
 
     let header = tabela.createTHead()
+    header.className = 'thead-dark'
     let headerRow = header.insertRow(-1)
     for (j = 0; j < varColunas.length; j++) {
-        let th = headerRow.insertCell(-1)
+        let th = document.createElement('th')
         th.innerText = varColunas[j]
+        headerRow.appendChild(th)
     }
 
     let tbody = tabela.createTBody()
     for (i = 0; i < dadosTabela.length; i++) {
         let novaLinha = tbody.insertRow(-1)
-        if (i === 0) {
-            novaLinha.className = 'linhaZ'
-        }
         for (j = 0; j < nColunas; j++) {
             let novaCelula = novaLinha.insertCell(-1)
             novaCelula.id = "T" + nTabelas + "I" + i + "J" + j
@@ -107,30 +87,29 @@ function mostrarTabela() {
             if (!otima) {
                 if (j == colunaPivo || i == linhaPivo) {
                     if (j == colunaPivo && i == linhaPivo) {
-                        novaCelula.className = "elementoPivo"
+                        novaCelula.className = "table-secondary"
                     } else {
-                        novaCelula.className = "pivo"
+                        novaCelula.className = "table-active"
                     }
                 }
             } else if (i == 0 && j == nColunas - 1) {
-                novaCelula.className = "valorZ"
+                novaCelula.className = "table-success"
             }
         }
     }
-    divTabela.appendChild(tabela)
+    calculosabela.appendChild(tabela)
     calcularVBS()
 }
 
 function mostrarNLP() {
-    let divTabela = document.getElementById("divt")
+    let calculosabela = document.getElementById("calculos")
     let tabela = document.createElement('table')
-    tabela.className = 'nlp'
+    tabela.className = 'table'
     let dvText = document.createElement('div')
     dvText.innerText = 'Nova Linha Pivô:'
-    divTabela.appendChild(dvText)
+    calculosabela.appendChild(dvText)
     let tbody = tabela.createTBody()
     let novaLinha = tbody.insertRow(-1)
-    novaLinha.className = 'nlp'
     let novaCelula = novaLinha.insertCell(-1)
     novaCelula.innerText = 'LP='
     for (j = 0; j < nColunas; j++) {
@@ -141,7 +120,6 @@ function mostrarNLP() {
     novaCelula.innerText = '(÷' + valorPivo + ')'
 
     novaLinha = tbody.insertRow(-1)
-    novaLinha.className = 'nlp'
     novaCelula = novaLinha.insertCell(-1)
     novaCelula.innerText = 'NLP ='
     for (j = 0; j < NLP.length; j++) {
@@ -150,18 +128,18 @@ function mostrarNLP() {
     }
     novaCelula = novaLinha.insertCell(-1)
     novaCelula.innerText = ''
-    divTabela.appendChild(tabela)
+    calculosabela.appendChild(tabela)
 }
 
-function mostrarCalculos(){
-    let divTabela = document.getElementById("divt")
-    for(l=0; l<oldTabela.length;l++) { 
+function mostrarCalculos() {
+    let calculosabela = document.getElementById("calculos")
+    for (l = 0; l < oldTabela.length; l++) {
         if (l !== linhaPivo) {
             let tabela = document.createElement('table')
-            tabela.className = 'nlp'
+            tabela.className = 'table'
             let dvText = document.createElement('div')
-            dvText.innerText = 'Nova Linha '+(l+1)+':'
-            divTabela.appendChild(dvText)
+            dvText.innerText = 'Nova Linha ' + (l + 1) + ':'
+            calculosabela.appendChild(dvText)
             let tbody = tabela.createTBody()
             let novaLinha = tbody.insertRow(-1)
             let novaCelula = novaLinha.insertCell(-1)
@@ -171,10 +149,9 @@ function mostrarCalculos(){
                 novaCelula.innerText = NLP[j]
             }
             novaCelula = novaLinha.insertCell(-1)
-            novaCelula.innerText = '*-('+oldTabela[l][colunaPivo]+')'
+            novaCelula.innerText = '*-(' + oldTabela[l][colunaPivo] + ')'
 
             novaLinha = tbody.insertRow(-1)
-            novaLinha.className = 'meio1'
             novaCelula = novaLinha.insertCell(-1)
             novaCelula.innerText = ' ='
             for (j = 0; j < NLP.length; j++) {
@@ -183,9 +160,8 @@ function mostrarCalculos(){
             }
             novaCelula = novaLinha.insertCell(-1)
             novaCelula.innerText = '+'
-            
+
             novaLinha = tbody.insertRow(-1)
-            novaLinha.className = 'meio2'
             novaCelula = novaLinha.insertCell(-1)
             novaCelula.innerText = ' Antiga='
             for (j = 0; j < NLP.length; j++) {
@@ -197,7 +173,7 @@ function mostrarCalculos(){
 
             novaLinha = tbody.insertRow(-1)
             novaCelula = novaLinha.insertCell(-1)
-            novaCelula.innerText = ' NL'+(l+1)+'='
+            novaCelula.innerText = ' NL' + (l + 1) + '='
             for (j = 0; j < NLP.length; j++) {
                 let novaCelula = novaLinha.insertCell(-1)
                 novaCelula.innerText = dadosTabela[l][j]
@@ -205,7 +181,7 @@ function mostrarCalculos(){
             novaCelula = novaLinha.insertCell(-1)
             novaCelula.innerText = ''
 
-            divTabela.appendChild(tabela)
+            calculosabela.appendChild(tabela)
         }
     }
 }
@@ -257,8 +233,9 @@ function verificarSolucao() {
 }
 
 function calcularVBS() {
-    let divTabela = document.getElementById("divt")
+    let calculosabela = document.getElementById("calculos")
     let tableVB = document.createElement('table')
+    tableVB.className = 'table'
     let vbHead = tableVB.createTHead();
     let vbBody = tableVB.createTBody();
     let novaLinha = vbHead.insertRow(-1)
@@ -269,13 +246,14 @@ function calcularVBS() {
     novaCelula = novaLinha.insertCell(-1);
     novaCelula.innerText = 'Valor de Z'
 
-    divTabela.appendChild(tableVB)
+    calculosabela.appendChild(tableVB)
 }
 
-function calcularSimplex() {
-    let divTabela = document.getElementById("divt")
-    divTabela.innerHTML = ''
-    
+function calcularSimplex(e) {
+    e.preventDefault();
+    let calculosabela = document.getElementById("calculos")
+    calculosabela.innerHTML = ''
+
     prepararValores()
     while (!otima) {
         encontrarPivos()
@@ -284,6 +262,6 @@ function calcularSimplex() {
         if (verificarSolucao()) {
             otima = true
             mostrarTabela()
-        }        
+        }
     }
 }

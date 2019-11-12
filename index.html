@@ -5,24 +5,35 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Simplex Calculator</title>
-  <link rel="stylesheet" href="css/styles.css"
-    href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 
 <body>
+  <h1 class="display-4">Simplex Calculator</h1>
   <div class="container-fluid">
-    <form id="divqtdx">
-      <span>Número de variáveis de decisão (x):</span>
-      <input id="num_variavies" onfocusout="deixaInteiros(this)" />
+    <form class="form-group">
+      <lable for="num_variavies">Quantidade de Variáveis</lable>
+      <input id="num_variavies" onfocusout="deixaInteiros(this)" class="form-control" />
+      <small id="variaveisHelp" class="form-text text-muted">Número de varíaveis de decisão (X1, X2, X3 ...)</small>
       <br />
-      <span>Número de restrições:</span>
-      <input id="num_restricoes" onfocusout="deixaInteiros(this)" />
+      <lable for="num_restricoes">Quantidade de Restrições</lable>
+      <input id="num_restricoes" onfocusout="deixaInteiros(this)" class="form-control" />
+      <small id="restricoesHelp" class="form-text text-muted">Número de restrições do problema</small>
       <br />
-      <button id="gera_restricoes">Continuar</button>
+      <button type="submit" id="gera_restricoes" class="btn btn-primary">Continuar</button>
     </form>
-    <div id="restricoes"></div>
-    <button onclick="calcularSimplex()">Calcular</button>
-    <div id="divt" style="max-width: 600px;"></div>
+    <form id="valoresForm" class="form-inline">
+      <label class="my-1 mr-2" for="zx1">Z = </label>
+      <input class="form-control my-1 mr-sm-2" id="zx1" onfocusout="deixaInteiros(this)" />
+      <label class="my-1 mr-2" for="zx1"> X1 + </label>
+      <input class="form-control my-1 mr-sm-2" id="zx2" onfocusout="deixaInteiros(this)" />
+      <label class="my-1 mr-2" for="zx2"> X2 + </label>
+      <div class="custom-control custom-checkbox my-1 mr-sm-2">
+        <input type="checkbox" class="custom-control-input" id="customControlInline">
+        <label class="custom-control-label" for="customControlInline">Remember my preference</label>
+      </div>
+    </form>
+    <div id="calculos"></div>
   </div>
 </body>
 <script src="js/simplex.js"></script>
