@@ -106,7 +106,7 @@ function mostrarNLP() {
     let tabela = document.createElement('table')
     tabela.className = 'table'
     let dvText = document.createElement('div')
-    dvText.innerText = 'Nova Linha Pivô:'
+    dvText.innerHTML = '<b>Nova Linha Pivô:</b>'
     calculosabela.appendChild(dvText)
     let tbody = tabela.createTBody()
     let novaLinha = tbody.insertRow(-1)
@@ -138,7 +138,7 @@ function mostrarCalculos() {
             let tabela = document.createElement('table')
             tabela.className = 'table'
             let dvText = document.createElement('div')
-            dvText.innerText = 'Nova Linha ' + (l + 1) + ':'
+            dvText.innerHTML = '<b>Nova Linha ' + (l + 1) + ':</b>'
             calculosabela.appendChild(dvText)
             let tbody = tabela.createTBody()
             let novaLinha = tbody.insertRow(-1)
@@ -250,7 +250,7 @@ function calcularVBS() {
 }
 
 function calcularSimplex(e) {
-    e.preventDefault();
+  //  e.preventDefault();
     let calculosabela = document.getElementById("calculos")
     calculosabela.innerHTML = ''
 
