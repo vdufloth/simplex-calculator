@@ -228,6 +228,7 @@ function calcularVBS() {
 
 function reformularRestricoes(e) {
     e.preventDefault()
+    document.getElementById('novas_restricoes').innerHTML = ''
     //gerar novas linhas e prencher a tabela
     var num_variavies = document.getElementById('num_variavies').value;
     var num_restricoes = document.getElementById('num_restricoes').value;
@@ -235,49 +236,93 @@ function reformularRestricoes(e) {
     for(i=1; i <= num_variavies; i++){
         varColunas.push('X'+i);
     }
-    for(i=1; i <= (parseInt(num_restricoes)+1); i++){
+    nLinhas = parseInt(num_restricoes)+1
+    for(i=1; i <= num_restricoes; i++){
         varColunas.push('XF'+i);
     }
     varColunas.push('b');
     nColunas = varColunas.length
     dadosTabela = [];
-    for (i = 0; i <= num_restricoes; i++) {
+    for (i = 0; i < nLinhas; i++) {
         dadosTabela.push(new Array(nColunas));
     }
     //Primeira Coluna
     dadosTabela[0][0] = 1
-    for (i = 1; i <= num_restricoes; i++) {
+    for (i = 1; i < nLinhas; i++) {
         dadosTabela[i][0] = 0
     }//end Primeira coluna   
     var valoresExpressoes = []
     document.getElementById("valores_form")
-            .querySelectorAll("input").forEach((input) => {
+            .querySelectorAll("input.meio").forEach((input) => {
                 valoresExpressoes.push(input.value)
+            })
+    var valoresIguais = []
+    document.getElementById("valores_form")
+            .querySelectorAll("input.igual").forEach((input) => {
+                valoresIguais.push(input.value)
             })
     //colunas do meio
     console.log(valoresExpressoes)
-    for (i=0;i <=num_restricoes; i++){
+    nextValor = 0
+    for (i=0; i < nLinhas; i++){
         for(j=1; j<nColunas; j++){
             if (i == 0) { //linha Z
-                if (j <= (num_restricoes)) {
-                    dadosTabela[i][j] = valoresExpressoes[j-1]
+                if (j <= (num_variavies)) {
+                    dadosTabela[i][j] = valoresExpressoes[nextValor]*-1
+                    nextValor+=1
                 } else {
                     dadosTabela[i][j] = 0
                 }
             } else { //outras linhas
-                if (j <= (num_restricoes)) {
-                    dadosTabela[i][j] = valoresExpressoes[(/*calculo maluco*/)]
-                } else { // 0 menos na do seu xf1
+                if (j <= (num_variavies)) {
+                    dadosTabela[i][j] = parseInt(valoresExpressoes[nextValor])
+                    nextValor+=1
+                } else if (j == (parseInt(num_variavies)+i)){
+                    dadosTabela[i][j] = 1
+                } else {
                     dadosTabela[i][j] = 0
                 }
             }
         }
     }//end colunas do meio
+    //colunas dos resultados]
+    nextValor = 0
+    for (i=1; i < nLinhas; i++){
+        dadosTabela[i][nColunas-1] = parseInt(valoresIguais[nextValor])
+        nextValor+=1
+    }//end colunas dos resultados
     console.log(dadosTabela)
-
-    NLP = []
-    nTabelas = 0
-    otima = false
+    let divs = ''
+    for (i=0; i<nLinhas; i++) {
+        divs += '<div>'
+        if (i == 0){
+            divs += '0 = '
+        }
+        for(j=0; j<nColunas; j++){
+            if (j == nColunas-1 && i>0) {
+                divs += ' = ' + dadosTabela[i][j]
+            } else if (dadosTabela[i][j] !== 0) {
+                if (dadosTabela[i][j] == 1){
+                    divs += mais + varColunas[j]
+                } else if (dadosTabela[i][j] == -1){
+                    divs += ' - ' + varColunas[j]
+                } else {
+                    if (dadosTabela[i][j] > 0){
+                        divs += mais + dadosTabela[i][j]+varColunas[j]
+                    } else {
+                        divs += ' - ' + (dadosTabela[i][j]*-1)+varColunas[j]
+                    }
+                }
+            }            
+        }
+        divs += '</div>'
+    }
+    divs += '<div> X1';
+    for (var i = 2; i <= num_variavies; i++) {
+        divs += ', X'+i
+    }
+    divs += ' >= 0</div>'
+    document.getElementById('novas_restricoes').innerHTML += divs
     document.getElementById('novas_restricoes').innerHTML += '<button class="btn btn-primary" onclick="calcularSimplex()">Calcular Tabelas</button>'
 }
 
@@ -299,8 +344,10 @@ function valoresTeste(){
 function calcularSimplex() {
     let calculosabela = document.getElementById("calculos")
     calculosabela.innerHTML = ''
-
-    valoresTeste()
+    NLP = []
+    nTabelas = 0
+    otima = false
+    //valoresTeste()
     while (!otima) {
         encontrarPivos()
         mostrarTabela()

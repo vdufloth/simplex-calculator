@@ -11,7 +11,7 @@ function gerarRestricoes(e) {
     if (num_restricoes > 0 && num_variavies > 0) {
         let num_linhas = parseInt(num_restricoes) + 1
         document.getElementById('valores_form').innerHTML = '<label class="my-1 mr-2 ">Preencha os valores das expressões:</label>'
-        for (var j = 1; j <= num_linhas; j++) {
+        for (var j = 1; j < num_linhas; j++) {
             var line = '<div class="form-inline">';
             for (var i = 1; i <= num_variavies; i++) {
                 if (j == 1 && i == 1) { // primeira linha
@@ -19,7 +19,7 @@ function gerarRestricoes(e) {
                 } else if (i == 1) {
                     line += '<label class="my-1 mr-2 "> { </label>';
                 }
-                line += '<input type="number" class="form-control my-1 mr-sm-2 restricoes-input" />';
+                line += '<input type="number" class="form-control my-1 mr-sm-2 restricoes-input meio" />';
 
                 let sinal = ''
                 if (i == num_variavies) {
@@ -32,7 +32,7 @@ function gerarRestricoes(e) {
             
                 line += '<label class="my-1 mr-2" > X' + i + ' ' + sinal + ' </label>';
                 if (j !== 1 && i == num_variavies ) {
-                    line += '<input type="number" class="form-control my-1 mr-sm-2 restricoes-input"/>'
+                    line += '<input type="number" class="form-control my-1 mr-sm-2 restricoes-input igual"/>'
                 }
             }
             line += "</div>";
