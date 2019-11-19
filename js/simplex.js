@@ -24,7 +24,7 @@ function encontrarPivos() {
     console.log('Coluna pivô: ' + colunaPivo + ' com valor: ' + menorValor)
     // Linha Pivô = Elemento independente (ultima coluna) dividido pelo valor da sua linha na coluna pivô
     // Seleciona a com o menor valor dentre os valores positivos dessas divisões
-    linhaPivo = 0
+    linhaPivo = 1
     ultimaColuna = nColunas - 1
     menorValor = (dadosTabela[1][ultimaColuna] / dadosTabela[1][colunaPivo])
     for (i = 2; i < dadosTabela.length; i++) {
@@ -223,6 +223,34 @@ function calcularVBS() {
     novaCelula = novaLinha.insertCell(-1);
     novaCelula.innerText = 'Valor de Z'
 
+    let vnbs = ''
+    for (j=0; j<nColunas-1; j++){
+        if(dadosTabela[0][j] !== 0){
+            vnbs = varColunas[j] +', '
+        }
+    }
+    let vbs = ''
+    for (j=0; j<nColunas-1; j++){
+        var count = 0
+        for (i=0; i<dadosTabela.length-1; i++){
+            if (dadosTabela[i][j] == 1){
+                count += 1
+            }
+        }
+        if (count == 1){
+            vbs = varColunas[j] +', '
+        }
+    }
+    let vz = dadosTabela[0][nColunas-1]
+
+    let novaLinha2 = vbBody.insertRow(-1)
+    let novaCelula2 = novaLinha2.insertCell(-1);
+    novaCelula2.innerText = vbs
+    novaCelula2 = novaLinha2.insertCell(-1);
+    novaCelula2.innerText = vnbs
+    novaCelula2 = novaLinha2.insertCell(-1);
+    novaCelula2.innerText = vz
+
     calculosabela.appendChild(tableVB)
 }
 
@@ -303,12 +331,12 @@ function reformularRestricoes(e) {
                 divs += ' = ' + dadosTabela[i][j]
             } else if (dadosTabela[i][j] !== 0) {
                 if (dadosTabela[i][j] == 1){
-                    divs += mais + varColunas[j]
+                    divs += ' + ' + varColunas[j]
                 } else if (dadosTabela[i][j] == -1){
                     divs += ' - ' + varColunas[j]
                 } else {
                     if (dadosTabela[i][j] > 0){
-                        divs += mais + dadosTabela[i][j]+varColunas[j]
+                        divs += ' + ' + dadosTabela[i][j]+varColunas[j]
                     } else {
                         divs += ' - ' + (dadosTabela[i][j]*-1)+varColunas[j]
                     }
