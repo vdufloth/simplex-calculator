@@ -40,6 +40,7 @@ function encontrarPivos() {
 }
 
 function mostrarTabela() {
+    console.log('mostrando tabela')
     let calculosabela = document.getElementById("calculos")
     let tabela = document.createElement('table')
     tabela.className = 'table'
@@ -162,15 +163,21 @@ function mostrarCalculos() {
         }
     }
 }
+
+function truncate(num){
+    var with2Decimals = num.toString().match(/^-?\d+(?:\.\d{0,2})?/)[0]
+    return parseFloat(with2Decimals)
+}
 /* Nova linha é NLP vezes
 o elemento na intersecção da sua linha
 com sinal contrário
    somado com os valores da linha antiga) */
 function recalcularTabela() {
+    console.log('recalculando tabela')
     //NLP
     NLP = []
     for (j = 0; j < nColunas; j++) {
-        NLP[j] = (dadosTabela[linhaPivo][j] / valorPivo)
+        NLP[j] = truncate(dadosTabela[linhaPivo][j] / valorPivo)
     }
     console.log('NLP: ' + NLP)
     mostrarNLP()
@@ -189,8 +196,8 @@ function recalcularTabela() {
             if (i === linhaPivo) {
                 novaTabela[i][j] = NLP[j]
             } else {
-                lIntermediariaAux[i][j] = dadosTabela[i][colunaPivo] * -1 * NLP[j]
-                novaTabela[i][j] = lIntermediariaAux[i][j] + dadosTabela[i][j]
+                lIntermediariaAux[i][j] = truncate(dadosTabela[i][colunaPivo] * -1 * NLP[j])
+                novaTabela[i][j] = truncate(lIntermediariaAux[i][j] + dadosTabela[i][j])
             }
         }
         console.log(i + ' : ' + novaTabela[i])
@@ -210,6 +217,7 @@ function verificarSolucao() {
 }
 
 function calcularVBS() {
+    console.log('calculando VNBS')
     let calculosabela = document.getElementById("calculos")
     let tableVB = document.createElement('table')
     tableVB.className = 'table'
@@ -223,33 +231,55 @@ function calcularVBS() {
     novaCelula = novaLinha.insertCell(-1);
     novaCelula.innerText = 'Valor de Z'
 
-    let vnbs = ''
-    for (j=0; j<nColunas-1; j++){
-        if(dadosTabela[0][j] !== 0){
-            vnbs = varColunas[j] +', '
-        }
-    }
-    let vbs = ''
-    for (j=0; j<nColunas-1; j++){
-        var count = 0
-        for (i=0; i<dadosTabela.length-1; i++){
+    let vnbs = []
+    let vbs = []
+    let posi
+    console.log(dadosTabela)
+    for (j=1; j<nColunas-1; j++){
+        var count1 = 0
+        var count0 = 0
+        for (i=0; i<dadosTabela.length; i++){
             if (dadosTabela[i][j] == 1){
-                count += 1
+                count1 += 1
+                posi = i
+            } else if (dadosTabela[i][j] == 0) {
+                count0 += 1
             }
         }
-        if (count == 1){
-            vbs = varColunas[j] +', '
+        console.log(count1, count0)
+        if (count1 == 1 && count0 == (dadosTabela.length-1)){
+            vbs.push(varColunas[j]+' = '+dadosTabela[posi][nColunas-1])
+        } else {
+            vnbs.push(varColunas[j]+' = 0')
         }
     }
-    let vz = dadosTabela[0][nColunas-1]
+
+    let vz = 'Z = '+dadosTabela[0][nColunas-1]
 
     let novaLinha2 = vbBody.insertRow(-1)
     let novaCelula2 = novaLinha2.insertCell(-1);
-    novaCelula2.innerText = vbs
+    novaCelula2.innerText = vbs[0] === undefined ? '' : vbs[0]
     novaCelula2 = novaLinha2.insertCell(-1);
-    novaCelula2.innerText = vnbs
+    novaCelula2.innerText = vnbs[0] === undefined ? '' : vnbs[0]
     novaCelula2 = novaLinha2.insertCell(-1);
     novaCelula2.innerText = vz
+    
+    var maxL
+    if(vbs.length >= vnbs.length){
+        maxL = vbs.length
+    } else {
+        maxL = vnbs.length
+    }
+
+    for (i=1; i<maxL; i++){
+        novaLinha2 = vbBody.insertRow(-1)
+        novaCelula2 = novaLinha2.insertCell(-1);
+        novaCelula2.innerText = vbs[i] === undefined ? '' : vbs[i]
+        novaCelula2 = novaLinha2.insertCell(-1);
+        novaCelula2.innerText = vnbs[i] === undefined ? '' : vnbs[i]
+        novaCelula2 = novaLinha2.insertCell(-1);
+        novaCelula2.innerText = ''
+    }
 
     calculosabela.appendChild(tableVB)
 }
